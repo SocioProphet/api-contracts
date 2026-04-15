@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package socioprophet.contract_intelligence.v1;
+
+option go_package = "github.com/SocioProphet/api-contracts/generated/go/socioprophet/contract_intelligence/v1;contractintelligencev1";
+
+message SourceRef {
+  string uri = 1;
+  string source_type = 2;
+}
+
+message Span {
+  uint64 start = 1;
+  uint64 end = 2;
+  string label = 3;
+}
+
+message ProvenanceRef {
+  string source_path = 1;
+  double confidence = 2;
+}
+
+message LayoutRef {
+  uint32 page = 1;
+  repeated double bbox = 2;
+  uint64 span_start = 3;
+  uint64 span_end = 4;
+}
+
+message DocumentArtifact {
+  string artifact_type = 1;
+  string artifact_id = 2;
+  string version = 3;
+  string tenant_id = 4;
+  string story_id = 5;
+  string utc_timestamp = 6;
+  SourceRef source_ref = 7;
+  string content_hash = 8;
+  string mime_type = 9;
+  string language_hint = 10;
+  string jurisdiction_hint = 11;
+  string canonical_text = 12;
+  repeated LayoutRef layout_refs = 13;
+  repeated Span section_spans = 14;
+  repeated Span paragraph_spans = 15;
+  repeated Span sentence_spans = 16;
+  repeated NormalizationStep normalization_log = 17;
+  repeated ProvenanceRef provenance = 18;
+}
+
+message NormalizationStep {
+  string step = 1;
+  string description = 2;
+  string tool = 3;
+}
+
+message ResolverEvidence {
+  string source = 1;
+  string reason = 2;
+  double score = 3;
+}
+
+message PackVersions {
+  string schema = 1;
+  string pattern = 2;
+  string model = 3;
+}
+
+message ProfileResolution {
+  string document_id = 1;
+  string language = 2;
+  string jurisdiction = 3;
+  string region = 4;
+  string domain = 5;
+  string subdomain = 6;
+  double confidence = 7;
+  repeated ResolverEvidence resolver_evidence = 8;
+  string selected_schema_pack = 9;
+  string selected_pattern_pack = 10;
+  string selected_model_pack = 11;
+  PackVersions pack_versions = 12;
+}
+
+message ContractClause {
+  string clause_id = 1;
+  string document_id = 2;
+  repeated string section_path = 3;
+  string clause_type = 4;
+  string text = 5;
+  Span span = 6;
+  repeated string cross_refs = 7;
+  repeated ProvenanceRef provenance = 8;
+}
+
+message EffectiveWindow {
+  string start = 1;
+  string end = 2;
+}
+
+message ContractObligation {
+  string obligation_id = 1;
+  string document_id = 2;
+  string clause_id = 3;
+  string obligation_type = 4;
+  string actor = 5;
+  string counterparty = 6;
+  string beneficiary = 7;
+  string action = 8;
+  string object = 9;
+  string condition = 10;
+  string exception = 11;
+  string trigger = 12;
+  string timeframe = 13;
+  EffectiveWindow effective_window = 14;
+  double confidence = 15;
+  repeated string rule_hits = 16;
+  map<string, double> model_scores = 17;
+  repeated ProvenanceRef provenance = 18;
+}
+
+message InterpretationEvidence {
+  string evidence_id = 1;
+  string artifact_ref = 2;
+  string claim_type = 3;
+  repeated Span supporting_spans = 4;
+  repeated Span contradicting_spans = 5;
+  repeated string rule_trace = 6;
+  string model_trace = 7;
+  string review_state = 8;
+}
+
+message ReviewerFeedback {
+  string feedback_id = 1;
+  string document_id = 2;
+  string artifact_ref = 3;
+  string reviewer_id = 4;
+  string label = 5;
+  string rationale = 6;
+  repeated Span span_refs = 7;
+  string utc_timestamp = 8;
+}
+
+message ClauseSet {
+  string document_id = 1;
+  string version = 2;
+  repeated ContractClause clauses = 3;
+}
+
+message ObligationSet {
+  string document_id = 1;
+  string version = 2;
+  repeated ContractObligation obligations = 3;
+}
+
+message BenchmarkCase {
+  string case_id = 1;
+  string document_ref = 2;
+  ProfileResolution gold_profile = 3;
+  repeated ContractClause gold_clauses = 4;
+  repeated ContractObligation gold_obligations = 5;
+  repeated string slice_tags = 6;
+  string difficulty = 7;
+  string notes = 8;
+}
+
+message MetricValue {
+  string name = 1;
+  double value = 2;
+}
+
+message SliceMetric {
+  string slice = 1;
+  repeated MetricValue metrics = 2;
+}
+
+message EvaluationReport {
+  string run_id = 1;
+  string model_pack_id = 2;
+  string pattern_pack_id = 3;
+  repeated MetricValue metrics = 4;
+  repeated SliceMetric slice_metrics = 5;
+  repeated string error_buckets = 6;
+  repeated string regressions = 7;
+  string promotion_recommendation = 8;
+}

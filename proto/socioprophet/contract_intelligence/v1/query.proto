@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package socioprophet.contract_intelligence.v1;
+
+option go_package = "github.com/SocioProphet/api-contracts/generated/go/socioprophet/contract_intelligence/v1;contractintelligencev1";
+
+import "socioprophet/contract_intelligence/v1/types.proto";
+
+service ContractIntelligenceQueryService {
+  rpc GetDocumentArtifact(GetDocumentArtifactRequest) returns (GetDocumentArtifactResponse);
+  rpc GetClauseSet(GetClauseSetRequest) returns (GetClauseSetResponse);
+  rpc GetObligationSet(GetObligationSetRequest) returns (GetObligationSetResponse);
+  rpc GetInterpretationEvidence(GetInterpretationEvidenceRequest) returns (GetInterpretationEvidenceResponse);
+  rpc ListArtifactsByStory(ListArtifactsByStoryRequest) returns (ListArtifactsByStoryResponse);
+  rpc ListArtifactsByTimeWindow(ListArtifactsByTimeWindowRequest) returns (ListArtifactsByTimeWindowResponse);
+  rpc ListArtifactsByProfile(ListArtifactsByProfileRequest) returns (ListArtifactsByProfileResponse);
+}
+
+message ArtifactRef {
+  string artifact_type = 1;
+  string artifact_id = 2;
+  string version = 3;
+}
+
+message GetDocumentArtifactRequest {
+  string artifact_id = 1;
+  string version = 2;
+}
+
+message GetDocumentArtifactResponse {
+  DocumentArtifact artifact = 1;
+}
+
+message GetClauseSetRequest {
+  string document_id = 1;
+  string version = 2;
+}
+
+message GetClauseSetResponse {
+  ClauseSet clause_set = 1;
+}
+
+message GetObligationSetRequest {
+  string document_id = 1;
+  string version = 2;
+}
+
+message GetObligationSetResponse {
+  ObligationSet obligation_set = 1;
+}
+
+message GetInterpretationEvidenceRequest {
+  string artifact_ref = 1;
+  string version = 2;
+}
+
+message GetInterpretationEvidenceResponse {
+  repeated InterpretationEvidence evidence = 1;
+}
+
+message ListArtifactsByStoryRequest {
+  string story_id = 1;
+  string tenant_id = 2;
+}
+
+message ListArtifactsByStoryResponse {
+  repeated ArtifactRef artifacts = 1;
+}
+
+message ListArtifactsByTimeWindowRequest {
+  string tenant_id = 1;
+  string artifact_type = 2;
+  string start_utc = 3;
+  string end_utc = 4;
+}
+
+message ListArtifactsByTimeWindowResponse {
+  repeated ArtifactRef artifacts = 1;
+}
+
+message ListArtifactsByProfileRequest {
+  string language = 1;
+  string jurisdiction = 2;
+  string region = 3;
+  string domain = 4;
+  string subdomain = 5;
+}
+
+message ListArtifactsByProfileResponse {
+  repeated ArtifactRef artifacts = 1;
+}

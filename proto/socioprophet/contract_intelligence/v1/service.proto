@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package socioprophet.contract_intelligence.v1;
+
+option go_package = "github.com/SocioProphet/api-contracts/generated/go/socioprophet/contract_intelligence/v1;contractintelligencev1";
+
+import "socioprophet/contract_intelligence/v1/types.proto";
+
+service ContractIntelligenceService {
+  rpc IngestDocument(IngestDocumentRequest) returns (IngestDocumentResponse);
+  rpc ResolveProfile(ResolveProfileRequest) returns (ResolveProfileResponse);
+  rpc ParseDocument(ParseDocumentRequest) returns (ParseDocumentResponse);
+  rpc ExtractClauses(ExtractClausesRequest) returns (ExtractClausesResponse);
+  rpc ExtractObligations(ExtractObligationsRequest) returns (ExtractObligationsResponse);
+  rpc ApplyReviewerFeedback(ApplyReviewerFeedbackRequest) returns (ApplyReviewerFeedbackResponse);
+  rpc RecomputeExtraction(RecomputeExtractionRequest) returns (RecomputeExtractionResponse);
+}
+
+message IngestDocumentRequest {
+  string source_uri = 1;
+  string source_type = 2;
+  string mime_type = 3;
+  string tenant_id = 4;
+  string story_id = 5;
+  string language_hint = 6;
+  string jurisdiction_hint = 7;
+}
+
+message IngestDocumentResponse {
+  DocumentArtifact artifact = 1;
+}
+
+message ResolveProfileRequest {
+  string document_id = 1;
+  string version = 2;
+}
+
+message ResolveProfileResponse {
+  ProfileResolution resolution = 1;
+}
+
+message ParseDocumentRequest {
+  string document_id = 1;
+  string version = 2;
+  string profile_version = 3;
+}
+
+message ParseDocumentResponse {
+  string document_id = 1;
+  string version = 2;
+  uint32 clause_count = 3;
+}
+
+message ExtractClausesRequest {
+  string document_id = 1;
+  string version = 2;
+}
+
+message ExtractClausesResponse {
+  ClauseSet clause_set = 1;
+}
+
+message ExtractObligationsRequest {
+  string document_id = 1;
+  string version = 2;
+}
+
+message ExtractObligationsResponse {
+  ObligationSet obligation_set = 1;
+}
+
+message ApplyReviewerFeedbackRequest {
+  ReviewerFeedback feedback = 1;
+}
+
+message ApplyReviewerFeedbackResponse {
+  string status = 1;
+}
+
+message RecomputeExtractionRequest {
+  string document_id = 1;
+  string version = 2;
+  string schema_pack = 3;
+  string pattern_pack = 4;
+  string model_pack = 5;
+}
+
+message RecomputeExtractionResponse {
+  string run_id = 1;
+  string status = 2;
+}

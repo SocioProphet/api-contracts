@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package socioprophet.contract_intelligence.v1;
+
+option go_package = "github.com/SocioProphet/api-contracts/generated/go/socioprophet/contract_intelligence/v1;contractintelligencev1";
+
+import "socioprophet/contract_intelligence/v1/types.proto";
+
+service ContractIntelligenceEvaluationService {
+  rpc RunBenchmark(RunBenchmarkRequest) returns (RunBenchmarkResponse);
+  rpc CompareModelVersions(CompareModelVersionsRequest) returns (CompareModelVersionsResponse);
+  rpc ComparePatternPackVersions(ComparePatternPackVersionsRequest) returns (ComparePatternPackVersionsResponse);
+  rpc ApprovePromotion(ApprovePromotionRequest) returns (ApprovePromotionResponse);
+  rpc ReplayRun(ReplayRunRequest) returns (ReplayRunResponse);
+}
+
+message RunBenchmarkRequest {
+  repeated BenchmarkCase benchmark_cases = 1;
+  string model_pack_id = 2;
+  string pattern_pack_id = 3;
+}
+
+message RunBenchmarkResponse {
+  EvaluationReport report = 1;
+}
+
+message CompareModelVersionsRequest {
+  repeated string model_pack_ids = 1;
+  string pattern_pack_id = 2;
+  repeated BenchmarkCase benchmark_cases = 3;
+}
+
+message CompareModelVersionsResponse {
+  repeated EvaluationReport reports = 1;
+}
+
+message ComparePatternPackVersionsRequest {
+  repeated string pattern_pack_ids = 1;
+  string model_pack_id = 2;
+  repeated BenchmarkCase benchmark_cases = 3;
+}
+
+message ComparePatternPackVersionsResponse {
+  repeated EvaluationReport reports = 1;
+}
+
+message ApprovePromotionRequest {
+  string artifact_family = 1;
+  string artifact_version = 2;
+  string approver_id = 3;
+  string rationale = 4;
+}
+
+message ApprovePromotionResponse {
+  string status = 1;
+}
+
+message ReplayRunRequest {
+  string run_id = 1;
+}
+
+message ReplayRunResponse {
+  string replay_run_id = 1;
+  string status = 2;
+}
